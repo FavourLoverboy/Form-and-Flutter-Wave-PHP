@@ -1,0 +1,44 @@
+/* google fonts */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body{
+  background: #abc;
+  font-family: 'Quicksand', sans-serif;
+}
+.container{
+  background: transparent;
+  width: 800px;
+}
+.form-container{
+  background: white;
+  display: block;
+  margin: 80px auto;
+  width: 90%;
+}
+.header{
+  border-bottom: 1px solid gray;
+  margin-bottom: 20px;
+}
+.footer{
+  border-top: 1px solid gray;
+  margin-top: 20px;
+}
+.form-box{
+  margin: 10px auto;
+  width: 90%;
+}
+.box-title{
+  font-size: 16px;
+  font-weight: 400;
+  margin: 40px 0 20px 0;
+}
+label{
+  font-size: 14px;
+}
+input{
+  margin-bottom: 5px;
+}
