@@ -98,7 +98,7 @@
             $_SESSION['amt'] = 5000;
             $_SESSION['name'] = $_SESSION['fname'] . ' ' . $_SESSION['mname'] . ' ' . $_SESSION['lname'];
 
-            if(!$err){
+            if(!$_SESSION['err']){
                 echo "<script>  window.location='payment' </script>";
             }
         }
