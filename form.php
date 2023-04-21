@@ -93,6 +93,10 @@
             $_SESSION['passport_basename']  = $basename_passport;
             $_SESSION['passport_source']    = $source_passport;
 
+            // payment amount
+            $_SESSION['amt'] = 5000;
+            $_SESSION['name'] = $_SESSION['fname'] . ' ' . $_SESSION['mname'] . ' ' . $_SESSION['lname'];
+
             if(!$err){
                 echo "<script>  window.location='payment' </script>";
             }
