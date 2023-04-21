@@ -7,7 +7,7 @@
         function processImage($extension, $size, $basename, $source){
             $pictureAllowed = array('png', 'PNG', 'jpg', 'JPG', 'jpeg', 'JPEG', 'gif', 'GIF', 'webp', 'WEBP', 'jfif', 'JFIF');
 
-            // checking file extention
+            // checking file extension
             if(!in_array($extension, $pictureAllowed)){
                 return 'Invalid Ext';
             }
@@ -73,6 +73,7 @@
 
         if($_POST){
             extract($_POST);
+            $show = true;
             $_SESSION['fname']              = htmlspecialchars(ucfirst($fname));
             $_SESSION['mname']              = htmlspecialchars(ucfirst($mname));
             $_SESSION['lname']              = htmlspecialchars(ucfirst($lname));
@@ -101,7 +102,18 @@
     <div class="container">
         <?php 
         
-            if($err){
+            if($show AND $err AND !($_SESSION['success'])){
+                echo "
+                    <div id='liveAlertPlaceholder'>
+                        <div class='alert alert-$type alert-dismissible' role='alert'>
+                            $errMsg
+                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                        </div>
+                    </div>
+                ";
+            }else if($_SESSION['success']){
+                $type = 'success';
+                $errMsg = 'Complete';
                 echo "
                     <div id='liveAlertPlaceholder'>
                         <div class='alert alert-$type alert-dismissible' role='alert'>

@@ -8,7 +8,7 @@
             $servername = "localhost";
             $username = "root";
             $password = "";
-            $dbname = "estamuniversity";
+            $dbname = "Form-and-Flutter-Wave-PHP";
             $this->connect = "";
             try{
                 $this->connect = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
