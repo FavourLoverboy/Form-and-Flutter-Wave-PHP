@@ -27,7 +27,7 @@
     $insert = $collect->tbl_insert($tblquery, $tblvalue);
     if($insert){
         $_SESSION['success'] = true;
-        echo "<script>  window.location='form' </script>";
+        echo "<script>  window.location='email' </script>";
     }
 
 ?>
