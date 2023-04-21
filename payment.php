@@ -47,14 +47,15 @@
     $res = json_decode($response);
     
 
-    if($res->status == 'success')
-    {
+    if($res->status == 'success'){
         $link = $res->data->link;
         echo "<script>  window.location='$link';</script>";
-    }
-    else
-    {
-        echo 'We can not process your payment';
+    }else{
+        $_SESSION['err'] = true;
+        $_SESSION['show'] = true;
+        $_SESSION['success'] = false;
+        $_SESSION['errMsg'] = 'We can not process your payment';
+        echo "<script>  window.location='form' </script>";
     }
 
 ?>

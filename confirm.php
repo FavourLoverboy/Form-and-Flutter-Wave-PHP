@@ -1,3 +1,4 @@
+<?php include('includes/header.php'); ?>
 <?php 
 
     if(isset($_GET['status'])){
@@ -35,19 +36,20 @@
                 if($amountPaid >= $amountToPay){
                     echo "<script>  window.location='proceed' </script>";
                 }else{
-                    $err = true;
-                    $show = true;
+                    $_SESSION['err'] = true;
+                    $_SESSION['show'] = true;
                     $_SESSION['success'] = false;
-                    $errMsg = 'Fraud transaction detected, you paid lesser than what you were meant to.';
+                    $_SESSION['errMsg'] = 'Fraud transaction detected, you paid lesser than what you were meant to.';
                     echo "<script>  window.location='form' </script>";
                 }
             }else{
-                $err = true;
-                $show = true;
+                $_SESSION['err'] = true;
+                $_SESSION['show'] = true;
                 $_SESSION['success'] = false;
-                $errMsg = 'Can not process payment';
+                $_SESSION['errMsg'] = 'Can not process payment';
                 echo "<script>  window.location='form' </script>";
             }
         }
     }
 ?>
+<?php include('includes/footer.php'); ?>

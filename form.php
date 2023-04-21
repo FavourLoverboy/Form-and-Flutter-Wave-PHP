@@ -1,79 +1,80 @@
 <?php include('includes/header.php'); ?>
     <?php 
 
-        $err = false;
-        $type = "danger";
-        // Process Image Function
-        function processImage($extension, $size, $basename, $source){
-            $pictureAllowed = array('png', 'PNG', 'jpg', 'JPG', 'jpeg', 'JPEG', 'gif', 'GIF', 'webp', 'WEBP', 'jfif', 'JFIF');
+        if($_POST){
+            $_SESSION['err'] = false;
+            $type = "danger";
+            // Process Image Function
+            function processImage($extension, $size, $basename, $source){
+                $pictureAllowed = array('png', 'PNG', 'jpg', 'JPG', 'jpeg', 'JPEG', 'gif', 'GIF', 'webp', 'WEBP', 'jfif', 'JFIF');
 
-            // checking file extension
-            if(!in_array($extension, $pictureAllowed)){
-                return 'Invalid Ext';
+                // checking file extension
+                if(!in_array($extension, $pictureAllowed)){
+                    return 'Invalid Ext';
+                }
+                
+                // checking file size
+                if(!($size <= 1048576 * 2)){
+                    return 'Image too large';
+                    // if(!is_dir("../pics/$this->my_id/chat")){
+                    //     mkdir("../pics/$this->my_id/chat", 0777, true);
+                    // }
+                    // $destination = "../pics/$this->my_id/chat/" . $basename;
+                    // if(move_uploaded_file($source, $destination)){
+                    //     $this->allFiles .= "$this->my_id/chat/" . $basename . ',' . $type . ',-';
+                    // }
+                }
+                return 'Valid';
             }
             
-            // checking file size
-            if(!($size <= 1048576 * 2)){
-                return 'Image too large';
-                // if(!is_dir("../pics/$this->my_id/chat")){
-                //     mkdir("../pics/$this->my_id/chat", 0777, true);
-                // }
-                // $destination = "../pics/$this->my_id/chat/" . $basename;
-                // if(move_uploaded_file($source, $destination)){
-                //     $this->allFiles .= "$this->my_id/chat/" . $basename . ',' . $type . ',-';
-                // }
-            }
-            return 'Valid';
-        }
-        
-        // passport Image Properties
-        $filename            = "pp-" . uniqid();
-        $size                = $_FILES['passport']['size'];
-        $extension           = pathinfo($_FILES['passport']['name'], PATHINFO_EXTENSION);
-        $basename_passport   = $filename . "." . $extension;
-        $source_passport     = $_FILES['passport']['tmp_name'];
+            // passport Image Properties
+            $filename            = "pp-" . uniqid();
+            $size                = $_FILES['passport']['size'];
+            $extension           = pathinfo($_FILES['passport']['name'], PATHINFO_EXTENSION);
+            $basename_passport   = $filename . "." . $extension;
+            $source_passport     = $_FILES['passport']['tmp_name'];
 
-        $passportPhoto = processImage($extension, $size, $basename_passport, $source_passport);
-        if($passportPhoto != "Valid"){
-            $err = true;
-            if($passportPhoto == 'Invalid Ext'){
-                $errMsg = 'Invalid Passport Extension';
-            }else{
-                $errMsg = 'Passport file too large';
-            }
-        }
-
-        // Multiple Images / Credentials
-        $_SESSION['credentials'] = "";
-        if(!$err){
-            foreach($_FILES['credential']['tmp_name'] as $key => $value){
-                $filename   = "cre-" . uniqid();
-                $size       = $_FILES['credential']['size'][$key];
-                $extension  = pathinfo($_FILES['credential']['name'][$key], PATHINFO_EXTENSION);
-                $basename   = $filename . "." . $extension;
-                $source     = $_FILES['credential']['tmp_name'][$key];
-                
-                if($extension){
-                    $credentials = processImage($extension, $size, $basename, $source);
-                    if($credentials == "Valid"){
-                        $_SESSION['credentials'] .= $source . ',--,' . $basename . ',00,';
-                    }else{
-                        $err = true;
-                        if($credentials == 'Invalid Ext'){
-                            $errMsg = 'Invalid Credential Extension';
-                        }else{
-                            $errMsg = 'Credential file too large';
-                        }
-                        break;
-                    }
+            $passportPhoto = processImage($extension, $size, $basename_passport, $source_passport);
+            if($passportPhoto != "Valid"){
+                $_SESSION['err'] = true;
+                if($passportPhoto == 'Invalid Ext'){
+                    $_SESSION['errMsg'] = 'Invalid Passport Extension';
+                }else{
+                    $_SESSION['errMsg'] = 'Passport file too large';
                 }
             }
-            $_SESSION['credentials'] = rtrim($_SESSION['credentials'], ",00,");
-        }
 
-        if($_POST){
+            // Multiple Images / Credentials
+            $_SESSION['credentials'] = "";
+            if(!$_SESSION['err']){
+                foreach($_FILES['credential']['tmp_name'] as $key => $value){
+                    $filename   = "cre-" . uniqid();
+                    $size       = $_FILES['credential']['size'][$key];
+                    $extension  = pathinfo($_FILES['credential']['name'][$key], PATHINFO_EXTENSION);
+                    $basename   = $filename . "." . $extension;
+                    $source     = $_FILES['credential']['tmp_name'][$key];
+                    
+                    if($extension){
+                        $credentials = processImage($extension, $size, $basename, $source);
+                        if($credentials == "Valid"){
+                            $_SESSION['credentials'] .= $source . ',--,' . $basename . ',00,';
+                        }else{
+                            $_SESSION['err'] = true;
+                            if($credentials == 'Invalid Ext'){
+                                $_SESSION['errMsg'] = 'Invalid Credential Extension';
+                            }else{
+                                $_SESSION['errMsg'] = 'Credential file too large';
+                            }
+                            break;
+                        }
+                    }
+                }
+                $_SESSION['credentials'] = rtrim($_SESSION['credentials'], ",00,");
+            }
+
+            
             extract($_POST);
-            $show = true;
+            $_SESSION['show'] = true;
             $_SESSION['fname']              = htmlspecialchars(ucfirst($fname));
             $_SESSION['mname']              = htmlspecialchars(ucfirst($mname));
             $_SESSION['lname']              = htmlspecialchars(ucfirst($lname));
@@ -106,22 +107,23 @@
     <div class="container">
         <?php 
         
-            if($show AND $err AND !($_SESSION['success'])){
+            if($_SESSION['show'] AND $_SESSION['err'] AND !($_SESSION['success'])){
+                $type = 'danger';
                 echo "
                     <div id='liveAlertPlaceholder'>
                         <div class='alert alert-$type alert-dismissible' role='alert'>
-                            $errMsg
+                            $_SESSION[errMsg]
                             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                         </div>
                     </div>
                 ";
             }else if($_SESSION['success']){
                 $type = 'success';
-                $errMsg = 'Complete';
+                $_SESSION['errMsg'] = 'Complete';
                 echo "
                     <div id='liveAlertPlaceholder'>
                         <div class='alert alert-$type alert-dismissible' role='alert'>
-                            $errMsg
+                            $_SESSION[errMsg]
                             <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
                         </div>
                     </div>
