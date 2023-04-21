@@ -6,7 +6,7 @@
     $url = $_GET['url'];
     $url = rtrim($url, '/');
     $url = explode('/', $url);
-    if ($url[0] == ""){
+    if($url[0] == ""){
         include('form.php');
     }
 

@@ -124,17 +124,17 @@
                     <label class="box-title">Student Name <span class="text-danger">*</span></label>
 
                     <div class="col-md-4">
-                        <input type="text" class="form-control" id="fname" name="fname" value="<?php echo $fname; ?>">
+                        <input type="text" class="form-control" id="fname" name="fname" value="<?php echo $_SESSION['fname']; ?>">
                         <label for="fname" class="form-label">First Name</label>
                     </div>
 
                     <div class="col-md-4">
-                        <input type="text" class="form-control" id="mname" name="mname" value="<?php echo $mname; ?>">
+                        <input type="text" class="form-control" id="mname" name="mname" value="<?php echo $_SESSION['mname']; ?>">
                         <label for="mname" class="form-label">Middle Name</label>
                     </div>
 
                     <div class="col-md-4">
-                        <input type="text" class="form-control" id="lname" name="lname" value="<?php echo $lname; ?>">
+                        <input type="text" class="form-control" id="lname" name="lname" value="<?php echo $_SESSION['lname']; ?>">
                         <label for="lname" class="form-label">Last Name</label>
                     </div>
                 </div>
@@ -143,7 +143,7 @@
                     <div class="col-md-6">
                         <label class="box-title">Date of Birth <span class="text-danger">*</span></label>
                         
-                        <input type="date" class="form-control" id="dob" name="dob" value="<?php echo $dob; ?>">
+                        <input type="date" class="form-control" id="dob" name="dob" value="<?php echo $_SESSION['dob']; ?>">
                         <label for="dob" class="form-label">Date</label>
                     </div>
 
@@ -152,9 +152,9 @@
 
                         <select class="form-dropdown form-control" name="gender">
                             <?php
-                                if($gender){
+                                if($_SESSION['gender']){
                                     echo "
-                                        <option value='$gender'>$gender</option>
+                                        <option value='$_SESSION[gender]'>$_SESSION[gender]</option>
                                     ";
                                 }else{
                                     echo "
@@ -174,9 +174,9 @@
 
                         <select class="form-control" name="nationality">
                             <?php
-                                if($nationality){
+                                if($_SESSION['nationality']){
                                     echo "
-                                        <option value='$nationality'>$nationality</option>
+                                        <option value='$_SESSION[nationality]'>$_SESSION[nationality]</option>
                                     ";
                                 }
                                 include('includes/countries.php');
@@ -186,7 +186,7 @@
                     <div class="col-md-6">
                         <label class="box-title">Phone Number <span class="text-danger">*</span></label>
                         
-                        <input type="text" class="form-control" name="number" value="<?php echo $number; ?>">
+                        <input type="text" class="form-control" name="number" value="<?php echo $_SESSION['number']; ?>">
                     </div>
                 </div>
 
@@ -194,7 +194,7 @@
                     <div class="col-md-6">
                         <label class="box-title">Email <span class="text-danger">*</span></label>
                         
-                        <input type="email" class="form-control" id="email" name="email" value="<?php echo $email; ?>">
+                        <input type="email" class="form-control" id="email" name="email" value="<?php echo $_SESSION['email']; ?>">
                         <label for="email" class="form-label">example@example.com</label>
                     </div>
 
@@ -203,9 +203,9 @@
 
                         <select class="form-control" name="mos">
                             <?php
-                                if($mos){
+                                if($_SESSION['mos']){
                                     echo "
-                                        <option value='$mos'>$mos</option>
+                                        <option value='$_SESSION[mos]'>$_SESSION[mos]</option>
                                     ";
                                 }else{
                                     echo "
@@ -222,26 +222,26 @@
                 <div class="row form-box">
                     <label class="box-title">Address <span class="text-danger">*</span></label>
                     <div class="col-md-12">
-                        <input type="text" class="form-control" id="address" name="address" value="<?php echo $address; ?>">
+                        <input type="text" class="form-control" id="address" name="address" value="<?php echo $_SESSION['address']; ?>">
                         <label for="address" class="form-label">Street Address</label>
                     </div>
 
                     <div class="col-md-6">
-                        <input type="text" class="form-control" id="city" name="city" value="<?php echo $city; ?>">
+                        <input type="text" class="form-control" id="city" name="city" value="<?php echo $_SESSION['city']; ?>">
                         <label for="city" class="form-label">City</label>
                     </div>
 
                     <div class="col-md-6">
-                        <input type="text" class="form-control" id="State/Province" name="state" value="<?php echo $state; ?>">
+                        <input type="text" class="form-control" id="State/Province" name="state" value="<?php echo $_SESSION['state']; ?>">
                         <label for="State/Province" class="form-label">State / Province</label>
                     </div>
 
                     <div class="col-md-12">
                         <select class="form-dropdown form-control" id="country" name="country">
                             <?php
-                                if($country){
+                                if($_SESSION['country']){
                                     echo "
-                                        <option value='$country'>$country</option>
+                                        <option value='$_SESSION[country]'>$_SESSION[country]</option>
                                     ";
                                 }
                                 include('includes/countries.php');
@@ -258,9 +258,9 @@
                         <select class="form-control" name="daf">
                             
                             <?php 
-                                if($daf){
+                                if($_SESSION['daf']){
                                     echo "
-                                        <option value='$daf'>$daf</option>
+                                        <option value='$_SESSION[daf]'>$_SESSION[daf]</option>
                                     ";
                                 }
                                 include('includes/degree.php');
@@ -273,9 +273,9 @@
 
                         <select class="form-dropdown form-control" name="cos">
                             <?php 
-                                if($cos){
+                                if($_SESSION['cos']){
                                     echo "
-                                        <option value='$cos'>$cos</option>
+                                        <option value='$_SESSION[cos]'>$_SESSION[cos]</option>
                                     ";
                                 }
                                 include('includes/courses.php');
@@ -302,7 +302,7 @@
                 <div class="row form-box">
                     <label class="box-title">Who introduced you to Estam University Akpakpa Campus? <span class="text-danger">*</span></label>
                     <div class="col-md-12">
-                        <input type="text" class="form-control" name="referral" value="<?php echo $referral; ?>">
+                        <input type="text" class="form-control" name="referral" value="<?php echo $_SESSION['referral']; ?>">
                     </div>
                 </div>
 
