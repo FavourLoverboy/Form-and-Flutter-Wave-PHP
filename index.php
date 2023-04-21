@@ -8,7 +8,7 @@
     $url = explode('/', $url);
     if ($url[0] == ""){
         include('form.php');
-    } 
+    }
 
 ?>
     

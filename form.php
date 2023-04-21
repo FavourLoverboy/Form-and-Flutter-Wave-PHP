@@ -1,6 +1,9 @@
 <?php include('includes/header.php'); ?>
     <?php 
 
+        $err = false;
+        $type = "danger";
+        // Process Image Function
         function processImage($extension, $size, $basename, $source){
             $pictureAllowed = array('png', 'PNG', 'jpg', 'JPG', 'jpeg', 'JPEG', 'gif', 'GIF', 'webp', 'WEBP', 'jfif', 'JFIF');
 
@@ -9,6 +12,7 @@
                 return 'Invalid Ext';
             }
             
+            // checking file size
             if(!($size <= 1048576 * 2)){
                 return 'Image too large';
                 // if(!is_dir("../pics/$this->my_id/chat")){
@@ -19,62 +23,97 @@
                 //     $this->allFiles .= "$this->my_id/chat/" . $basename . ',' . $type . ',-';
                 // }
             }
-
             return 'Valid';
         }
+        
+        // passport Image Properties
+        $filename            = "pp-" . uniqid();
+        $size                = $_FILES['passport']['size'];
+        $extension           = pathinfo($_FILES['passport']['name'], PATHINFO_EXTENSION);
+        $basename_passport   = $filename . "." . $extension;
+        $source_passport     = $_FILES['passport']['tmp_name'];
 
-        $filename   = "pp-" . uniqid();
-        $size = $_FILES['passport']['size'];
-        $extension  = pathinfo($_FILES['passport']['name'], PATHINFO_EXTENSION);
-        $basename   = $filename . "." . $extension;
-        $source     = $_FILES['passport']['tmp_name'];
-
-        $feedback = processImage($extension, $size, $basename, $source);
-        echo 'feedback ' . $feedback . '<br/>';
-
-
-        foreach($_FILES['credential']['tmp_name'] as $key => $value){
-            $filename   = "cre-" . uniqid();
-            $size = $_FILES['credential']['size'][$key];
-            $extension  = pathinfo($_FILES['credential']['name'][$key], PATHINFO_EXTENSION);
-            $basename   = $filename . "." . $extension;
-            $source     = $_FILES['credential']['tmp_name'][$key];
-            
-            if($extension){
-                $err = processImage($extension, $size, $basename, $source);
-                echo 'Multiple Image ' . $err . '<br>';
+        $passportPhoto = processImage($extension, $size, $basename_passport, $source_passport);
+        if($passportPhoto != "Valid"){
+            $err = true;
+            if($passportPhoto == 'Invalid Ext'){
+                $errMsg = 'Invalid Passport Extension';
             }else{
-                // $err = 'at least one file is required';
+                $errMsg = 'Passport file too large';
             }
+        }
+
+        // Multiple Images / Credentials
+        $_SESSION['credentials'] = "";
+        if(!$err){
+            foreach($_FILES['credential']['tmp_name'] as $key => $value){
+                $filename   = "cre-" . uniqid();
+                $size       = $_FILES['credential']['size'][$key];
+                $extension  = pathinfo($_FILES['credential']['name'][$key], PATHINFO_EXTENSION);
+                $basename   = $filename . "." . $extension;
+                $source     = $_FILES['credential']['tmp_name'][$key];
+                
+                if($extension){
+                    $credentials = processImage($extension, $size, $basename, $source);
+                    if($credentials == "Valid"){
+                        $_SESSION['credentials'] .= $source . ',--,' . $basename . ',00,';
+                    }else{
+                        $err = true;
+                        if($credentials == 'Invalid Ext'){
+                            $errMsg = 'Invalid Credential Extension';
+                        }else{
+                            $errMsg = 'Credential file too large';
+                        }
+                        break;
+                    }
+                }
+            }
+            $_SESSION['credentials'] = rtrim($_SESSION['credentials'], ",00,");
         }
 
         if($_POST){
             extract($_POST);
-            echo 'First name ' . $fname . '<br/>';
-            echo 'Middle name ' . $mname . '<br/>';
-            echo 'Last name ' . $lname . '<br/>';
-            echo 'Date of Birth ' . $dob . '<br/>';
-            echo 'Gender ' . $gender . '<br/>';
-            echo 'Nationality ' . $nationality . '<br/>';
-            echo 'Number ' . $number . '<br/>';
-            echo 'Email ' . $email . '<br/>';
-            echo 'Mode of Study ' . $mos . '<br/>';
-            echo 'Address ' . $address . '<br/>';
-            echo 'City ' . $city . '<br/>';
-            echo 'State ' . $state . '<br/>';
-            echo 'Country ' . $country . '<br/>';
-            echo 'Degree Aimed For ' . $daf . '<br/>';
-            echo 'Course of Study ' . $cos . '<br/>';
-            echo 'Referral ' . $referral . '<br/>';
-            echo 'Image Name ' . $filename . '<br/>';
-            echo 'Image Size ' . $size . '<br/>';
-            echo 'Image Extension ' . $extension . '<br/>';
-            echo 'Image BaseName ' . $basename . '<br/>';
-            echo 'Image Source ' . $source . '<br/>';
+            $_SESSION['fname']              = htmlspecialchars(ucfirst($fname));
+            $_SESSION['mname']              = htmlspecialchars(ucfirst($mname));
+            $_SESSION['lname']              = htmlspecialchars(ucfirst($lname));
+            $_SESSION['dob']                = htmlspecialchars($dob);
+            $_SESSION['gender']             = htmlspecialchars($gender);
+            $_SESSION['nationality']        = htmlspecialchars($nationality);
+            $_SESSION['number']             = htmlspecialchars($number);
+            $_SESSION['email']              = htmlspecialchars(lcfirst($email));
+            $_SESSION['mos']                = htmlspecialchars($mos);
+            $_SESSION['address']            = htmlspecialchars(ucfirst($address));
+            $_SESSION['city']               = htmlspecialchars(ucfirst($city));
+            $_SESSION['state']              = htmlspecialchars(ucfirst($state));
+            $_SESSION['country']            = htmlspecialchars($country);
+            $_SESSION['daf']                = htmlspecialchars($daf);
+            $_SESSION['cos']                = htmlspecialchars($cos);
+            $_SESSION['referral']           = htmlspecialchars(ucfirst($referral));
+            $_SESSION['passport_basename']  = $basename_passport;
+            $_SESSION['passport_source']    = $source_passport;
+
+            if(!$err){
+                echo "<script>  window.location='payment' </script>";
+            }
         }
 
     ?>
     <div class="container">
+        <?php 
+        
+            if($err){
+                echo "
+                    <div id='liveAlertPlaceholder'>
+                        <div class='alert alert-$type alert-dismissible' role='alert'>
+                            $errMsg
+                            <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                        </div>
+                    </div>
+                ";
+            }
+        
+        ?>
+        
         <div class="form-container">
             <form action="" method="POST" enctype="multipart/form-data">
                 <div class="header">
@@ -273,4 +312,4 @@
             </form>
         </div>
     </div>
-<?php include('includes/header.php'); ?>
+<?php include('includes/footer.php'); ?>
